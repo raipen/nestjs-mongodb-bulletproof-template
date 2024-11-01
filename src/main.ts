@@ -2,6 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { swagger } from './swagger';
 import { ValidationPipe } from '@nestjs/common';
+import getConfig from './config';
+
+const config = getConfig();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -9,9 +12,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
   app.useGlobalPipes(new ValidationPipe());
 
-  
-
-  if(process.env.NODE_ENV === 'development') {
+  if(config.env === 'development') {
     swagger(app);
   }
 
