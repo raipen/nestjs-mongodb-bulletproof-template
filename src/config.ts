@@ -5,23 +5,23 @@ export default () => {
     }
     if(env === 'test') return { env };
 
-    const mongodb = {
+    const database = {
         url: process.env.MONGODB_URL,
         dbName: process.env.MONGODB_DBNAME_MAIN || 'nest-temp',
         username: process.env.MONGODB_USERNAME,
         password: process.env.MONGODB_PASSWORD
     };
-    if (!mongodb.url) {
+    if (!database.url) {
         throw new Error('MONGODB_URL is required');
     }
-    if(!mongodb.username) {
+    if(!database.username) {
         throw new Error('MONGODB_USERNAME is required');
     }
-    if(!mongodb.password) {
+    if(!database.password) {
         throw new Error('MONGODB_PASSWORD is required');
     }
 
-    if(env === 'development') return { env, mongodb };
+    if(env === 'development') return { env, database };
 
     const firebase = {
         projectId: process.env.FIREBASE_PROJECT_ID,
@@ -41,5 +41,5 @@ export default () => {
         throw new Error('FIREBASE_CLIENT_EMAIL is required');
     }
 
-    return { env, mongodb, firebase };
+    return { env, database, firebase };
 }
