@@ -1,0 +1,29 @@
+services:
+  db:
+    image: mongodb/mongodb-community-server:latest
+    container_name: mongo
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    networks:
+      - my-network
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest-server
+    env_file:
+      - .env.local.docker
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    networks:
+      - my-network
+    links:
+      - db
+networks:
+  my-network:
