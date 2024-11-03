@@ -10,5 +10,6 @@ import { MongooseModuleWithValidation } from 'src/common/mongoose-module-with-va
   ],
   controllers: [UserController],
   providers: [UserService],
+  exports: [UserService],
 })
 export class UserModule {}

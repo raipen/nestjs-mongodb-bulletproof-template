@@ -27,7 +27,7 @@ export class UserService {
 
   }
 
-  async findOne(id: string) {
+  async findByFirebaseUid(id: string) {
     const user = await this.userModel.findOne({
       uid: id,
     }).exec();
