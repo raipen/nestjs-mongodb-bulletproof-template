@@ -3,12 +3,14 @@ import { UserService } from './user.service';
 import { ConfigService } from '@nestjs/config';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FirebaseAuthGuard } from 'src/auth/firebase-auth.guard';
+import { Public } from 'src/auth/public.decorator';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService, private readonly configService: ConfigService) {}
 
   @Post()
+  @Public()
   create() {
     if(this.configService.get('env') === 'test') {
       return this.userService.createForTest();
@@ -16,7 +18,6 @@ export class UserController {
     return this.userService.create();
   }
 
-  @UseGuards(FirebaseAuthGuard)
   @Get()
   findOne(@Request() req) {
     return req.user;

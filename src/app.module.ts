@@ -2,8 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import config from './config';
+import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
+import { FirebaseAuthGuard } from './auth/firebase-auth.guard';
+import config from './config';
 
 @Module({
   imports: [
@@ -25,6 +27,9 @@ import { MongooseModule } from '@nestjs/mongoose';
     UserModule
   ],
   controllers: [],
-  providers: [],
+  providers: [{
+    provide: APP_GUARD,
+    useClass: FirebaseAuthGuard
+  }],
 })
 export class AppModule {}
