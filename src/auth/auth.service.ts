@@ -20,12 +20,16 @@ export class AuthService {
     }
 
     async verifyIdToken(token: string) {
-        return this.auth.verifyIdToken(token);
+        try{
+            return await this.auth.verifyIdToken(token);
+        } catch (error) {
+            throw new UnauthorizedException();
+        }
     }
 
     async validateUser(token: string){
+        const decodedToken = await this.verifyIdToken(token);
         try {
-            const decodedToken = await this.verifyIdToken(token);
             const user = await this.userService.findByFirebaseUid(decodedToken.uid);
             return user;
         } catch (error) {

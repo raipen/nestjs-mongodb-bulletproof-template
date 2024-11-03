@@ -21,5 +21,6 @@ import { UserService } from 'src/user/user.service';
       inject: [ConfigService, UserService]
     }
   ],
+  exports: [AuthService],
 })
 export class AuthModule { }

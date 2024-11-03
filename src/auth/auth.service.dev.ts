@@ -1,35 +1,31 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from "@nestjs/config";
-import { AuthService } from './auth.service';
-import * as admin from 'firebase-admin';
-import { Auth, getAuth, DecodedIdToken } from "firebase-admin/auth";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { DecodedIdToken } from "firebase-admin/auth";
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class DevAuthService {
-    auth: Auth;
 
-    constructor(private userService: UserService) {}
+    constructor(private userService: UserService) { }
 
     async verifyIdToken(token: string) {
-        return { uid:'test' } as DecodedIdToken;
+        return {
+            uid: 'test',
+            email: 'test@gmail.com',
+            picture: 'test',
+            name: 'test',
+        } as unknown as DecodedIdToken;
     }
 
     async validateUser(token: string): Promise<any> {
-        let decodedToken: DecodedIdToken;
+        const decodedToken = await this.verifyIdToken(token);
+
         try {
-            decodedToken = await this.verifyIdToken(token);
-        } catch (error) {
-            throw new UnauthorizedException();
-        }
-        
-        try{
             const user = await this.userService.findByFirebaseUid(decodedToken.uid);
             return user;
-        }catch (error) {
-            if(!(error instanceof NotFoundException)) throw error;
-            return this.userService.createForTest();
+        } catch (error) {
+            if (!(error instanceof NotFoundException)) throw error;
+            return this.userService.create(token);
         }
     }
-        
+
 }

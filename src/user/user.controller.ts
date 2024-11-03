@@ -1,21 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, Headers } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ConfigService } from '@nestjs/config';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FirebaseAuthGuard } from 'src/auth/firebase-auth.guard';
 import { Public } from 'src/auth/public.decorator';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService, private readonly configService: ConfigService) {}
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   @Public()
-  create() {
-    if(this.configService.get('env') === 'test') {
-      return this.userService.createForTest();
-    }
-    return this.userService.create();
+  signUp(@Headers('authorization') authorization: string) {
+    return this.userService.create(authorization);
   }
 
   @Get()
