@@ -10,7 +10,7 @@ export class User {
     })
     id: string;
 
-    @Prop({ type: String, required: true })
+    @Prop({ type: String, required: true, unique: true })
     @ApiProperty({
         description: 'User UID(from Firebase)',
         example: 'test',
