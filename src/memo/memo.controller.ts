@@ -1,19 +1,21 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { MemoService } from './memo.service';
 import { RequestUpdateMemoNameDto, RequestUpdateMemoDescriptionDto } from './dto/update-memo.dto';
+import { User } from 'src/user/entities/user.entity';
+import { GetUser } from 'src/auth/decorators/user';
 
 @Controller('memo')
 export class MemoController {
   constructor(private readonly memoService: MemoService) {}
 
   @Post()
-  create() {
-    return this.memoService.create();
+  create(@GetUser() user: User) {
+    return this.memoService.create(user.id);
   }
 
   @Get()
-  findAll() {
-    return this.memoService.findAll();
+  findAll(@GetUser() user: User) {
+    return this.memoService.findAll(user.id);
   }
 
   @Get(':id')

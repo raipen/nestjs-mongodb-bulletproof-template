@@ -9,8 +9,9 @@ export class Memo {
   @ApiProperty({
     description: 'User ID',
     example: '60f6d2d5e5b4f4001f9b7e0f',
+    type: String,
   })
-  id: string;
+  id: Types.ObjectId;
 
   @Prop({ type: String, default: null })
   @ApiProperty({
@@ -34,11 +35,11 @@ export class Memo {
     description: 'updated date',
     example: '2021-07-21T13:00:00.000Z',
   })
-  updatedAt?: Date;
+  updatedAt: Date;
 
-  constructor(partial: Pick<MemoDocument, '_id' | keyof Memo | 'updatedAt'>) {
+  constructor(partial: Pick<MemoDocument, '_id' | keyof Memo>) {
     console.log(partial);
-    this.id = partial._id.toString();
+    this.id = partial._id;
     this.memo_name = partial.memo_name;
     this.memo_description = partial.memo_description;
     this.author = partial.author;
