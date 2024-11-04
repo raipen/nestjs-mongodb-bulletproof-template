@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes, Types, HydratedDocument } from 'mongoose';
-import { Exclude } from 'class-transformer';
+import { Exclude, Transform } from 'class-transformer';
 
 export type MemoDocument = HydratedDocument<Memo>;
 @Schema({ timestamps: true, versionKey: false })
@@ -11,6 +11,7 @@ export class Memo {
     example: '60f6d2d5e5b4f4001f9b7e0f',
     type: String,
   })
+  @Transform(({ value }) => value.toString(), { toPlainOnly: true })
   id: Types.ObjectId;
 
   @Prop({ type: String, default: null })
@@ -30,6 +31,10 @@ export class Memo {
   @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
   @Exclude()
   author: Types.ObjectId;
+
+  @Prop({ type: Date, default: null })
+  @Exclude()
+  deletedAt: Date;
 
   @ApiProperty({
     description: 'updated date',
