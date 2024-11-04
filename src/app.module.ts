@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FirebaseAuthGuard } from './auth/firebase-auth.guard';
+import { MemoModule } from './memo/memo.module';
 import config from './config';
 
 @Module({
@@ -24,7 +25,8 @@ import config from './config';
       }),
     }),
     AuthModule,
-    UserModule
+    UserModule,
+    MemoModule
   ],
   controllers: [],
   providers: [{
