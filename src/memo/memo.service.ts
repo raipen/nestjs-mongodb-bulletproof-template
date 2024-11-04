@@ -28,8 +28,36 @@ export class MemoService {
     return new Memo(memo);
   }
 
-  update(id: number) {
-    return `This action updates a #${id} memo`;
+  async changeName(
+    userId: Types.ObjectId,
+    memoId: Types.ObjectId,
+    { memo_name }: RequestUpdateMemoNameDto,
+  ) {
+    const memo = await this.memoModel.findById(memoId).exec();
+    if (!memo) {
+      throw new MemoNotFoundException(memoId);
+    }
+    if (memo.author.toString() !== userId.toString()) {
+      throw new ForbiddenException();
+    }
+    memo.memo_name = memo_name;
+    await memo.save();
+  }
+
+  async changeDesciption(
+    userId: Types.ObjectId,
+    memoId: Types.ObjectId,
+    { memo_description }: RequestUpdateMemoDescriptionDto,
+  ) {
+    const memo = await this.memoModel.findById(memoId).exec();
+    if (!memo) {
+      throw new MemoNotFoundException(memoId);
+    }
+    if (memo.author.toString() !== userId.toString()) {
+      throw new ForbiddenException();
+    }
+    memo.memo_description = memo_description;
+    await memo.save();
   }
 
   remove(id: number) {

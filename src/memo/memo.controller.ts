@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { MemoService } from './memo.service';
 import { Types } from 'mongoose';
 import { RequestUpdateMemoNameDto, RequestUpdateMemoDescriptionDto } from './dto/update-memo.dto';
@@ -39,9 +39,32 @@ export class MemoController {
     return this.memoService.findOne(user.id, id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, ) {
-    return this.memoService.update(+id);
+  @Patch(':id/name')
+  @ApiOperation({ summary: '메모 이름 변경' })
+  @ApiParam({ name: 'id', description: '메모 ID', type: String })
+  @ApiNoContentResponse({ description: '메모 이름 변경' })
+  @ApiForbiddenResponse({ description: '다른 사용자의 메모 이름 변경 시도' })
+  @ApiNotFoundResponse({ description: '메모를 찾을 수 없음' })
+  changeName(
+    @GetUser() userDto: User,
+    @Param('id', ParseObjectIdPipe) memoId: Types.ObjectId,
+    @Body() memoData: RequestUpdateMemoNameDto,
+  ) {
+    return this.memoService.changeName(userDto.id, memoId, memoData);
+  }
+
+  @Patch(':id/description')
+  @ApiOperation({ summary: '메모 설명 변경' })
+  @ApiParam({ name: 'id', description: '메모 ID', type: String })
+  @ApiNoContentResponse({ description: '메모 설명 변경' })
+  @ApiForbiddenResponse({ description: '다른 사용자의 메모 설명 변경 시도' })
+  @ApiNotFoundResponse({ description: '메모를 찾을 수 없음' })
+  changeDesciption(
+    @GetUser() userDto: User,
+    @Param('id', ParseObjectIdPipe) memoId: Types.ObjectId,
+    @Body() memoData: RequestUpdateMemoDescriptionDto,
+  ) {
+    return this.memoService.changeDesciption(userDto.id, memoId, memoData);
   }
 
   @Delete(':id')
