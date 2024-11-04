@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { swagger } from './swagger';
 import { ValidationPipe } from '@nestjs/common';
 import getConfig from './config';
-import { MongooseExceptionFilter } from './common/mongoose-exception-filter';
+import { MongooseExceptionFilter } from './common/mongoose-exception.filter';
 
 const config = getConfig();
 
