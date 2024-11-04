@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Memo } from './entities/memo.entity';
 import { RequestUpdateMemoNameDto, RequestUpdateMemoDescriptionDto } from './dto/update-memo.dto';
+import { MemoNotFoundException } from './exceptions/memo-not-found';
 
 @Injectable()
 export class MemoService {
@@ -20,8 +21,11 @@ export class MemoService {
     return memoList.map((memo) => new Memo(memo));
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} memo`;
+  async findOne(userId: Types.ObjectId, id: Types.ObjectId) {
+    const memo = await this.memoModel.findById(id).exec();
+    if(!memo) throw new MemoNotFoundException(id);
+    if(memo.author.toString() !== userId.toString()) throw new ForbiddenException();
+    return new Memo(memo);
   }
 
   update(id: number) {
