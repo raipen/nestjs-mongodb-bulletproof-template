@@ -30,9 +30,9 @@ describe('UserController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call UserService.create', () => {
+  it('should call UserService.create', async () => {
     const authorization = 'Bearer token';
-    controller.signUp(authorization);
+    await controller.signUp(authorization);
     expect(userService.create).toHaveBeenCalledWith(authorization);
   });
 
