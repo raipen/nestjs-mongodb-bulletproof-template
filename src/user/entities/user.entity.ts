@@ -39,7 +39,7 @@ export class User {
     })
     user_image: string;
 
-    constructor(partial: Pick<UserDocument, '_id' | keyof User>) {
+    constructor(partial: Pick<UserDocument, '_id' | Exclude<keyof User, 'id'>>) {
         this.id = partial._id;
         this.uid = partial.uid;
         this.email = partial.email;
