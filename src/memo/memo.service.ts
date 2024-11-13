@@ -17,7 +17,7 @@ export class MemoService {
   }
 
   async findAll(userId: Types.ObjectId) {
-    const memoList = await this.memoModel.find({ author: userId }).exec();
+    const memoList = await this.memoModel.find({ author: userId, deletedAt: null }).exec();
     return memoList.map((memo) => new Memo(memo));
   }
 
