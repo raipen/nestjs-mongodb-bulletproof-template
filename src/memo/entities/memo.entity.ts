@@ -42,8 +42,7 @@ export class Memo {
   })
   updatedAt: Date;
 
-  constructor(partial: Pick<MemoDocument, '_id' | keyof Memo>) {
-    console.log(partial);
+  constructor(partial: Pick<MemoDocument, '_id' | Exclude<keyof Memo, 'id'>>) {
     this.id = partial._id;
     this.memo_name = partial.memo_name;
     this.memo_description = partial.memo_description;
