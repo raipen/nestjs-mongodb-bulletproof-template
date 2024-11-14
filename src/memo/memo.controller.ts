@@ -68,7 +68,12 @@ export class MemoController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.memoService.remove(+id);
+  @ApiOperation({ summary: '메모 삭제' })
+  @ApiParam({ name: 'id', description: '메모 ID', type: String })
+  @ApiNoContentResponse({ description: '메모 삭제' })
+  @ApiForbiddenResponse({ description: '다른 사용자의 메모 삭제 시도' })
+  @ApiNotFoundResponse({ description: '메모를 찾을 수 없음' })
+  remove(@GetUser() userDto: User, @Param('id', ParseObjectIdPipe) memoId: Types.ObjectId) {
+    return this.memoService.remove(userDto.id, memoId);
   }
 }

@@ -60,7 +60,15 @@ export class MemoService {
     await memo.save();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} memo`;
+  async remove(userId: Types.ObjectId, memoId: Types.ObjectId) {
+    const memo = await this.memoModel.findById(memoId).exec();
+    if (!memo) {
+      throw new MemoNotFoundException(memoId);
+    }
+    if (memo.author.toString() !== userId.toString()) {
+      throw new ForbiddenException();
+    }
+    memo.deletedAt = new Date();
+    await memo.save();
   }
 }

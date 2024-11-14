@@ -69,4 +69,10 @@ describe('MemoController', () => {
     await controller.changeDesciption(mockUser, memoId, memoData);
     expect(memoService.changeDesciption).toHaveBeenCalledWith(mockUser.id, memoId, memoData);
   });
+
+  test('should call MemoService.remove', async () => {
+    const memoId = new Types.ObjectId();
+    await controller.remove(mockUser, memoId);
+    expect(memoService.remove).toHaveBeenCalledWith(mockUser.id, memoId);
+  });
 });

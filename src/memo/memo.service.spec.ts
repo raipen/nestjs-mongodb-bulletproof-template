@@ -202,4 +202,49 @@ describe('MemoService', () => {
     });
   });
 
+  describe('remove', () => {
+    test('memo를 삭제해야함', async () => {
+      const memoId = new Types.ObjectId();
+      const mockMemo = {
+        _id: memoId,
+        author: mockUser.id,
+        memo_name: 'test',
+        memo_description: 'test',
+        updatedAt: new Date(),
+        deletedAt: null,
+        save: jest.fn(),
+      }
+      memoModel.findById = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mockMemo),
+      });
+      await service.remove(mockUser.id, memoId);
+      expect(mockMemo.deletedAt).not.toBeNull();
+      expect(mockMemo.save).toHaveBeenCalled();
+    });
+
+    test('특정 memo가 존재하지 않으면, MemoNotFoundException을 던져야함', async () => {
+      const memoId = new Types.ObjectId();
+      memoModel.findById = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue(null),
+      });
+      await expect(async () => await service.remove(mockUser.id, memoId)).rejects.toThrow(MemoNotFoundException);
+    });
+
+    test('특정 memo가 다른 사용자의 것이면, ForbiddenException을 던져야함', async () => {
+      const memoId = new Types.ObjectId();
+      const mockMemo = {
+        _id: memoId,
+        author: new Types.ObjectId(),
+        memo_name: 'test',
+        memo_description: 'test',
+        updatedAt: new Date(),
+        deletedAt: null,
+        save: jest.fn(),
+      };
+      memoModel.findById = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mockMemo),
+      });
+      await expect(async () => await service.remove(mockUser.id, memoId)).rejects.toThrow(ForbiddenException);
+    });
+  });
 });
