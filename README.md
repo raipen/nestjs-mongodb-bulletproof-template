@@ -1,4 +1,4 @@
-# 구글 로그인이 가능한 간단한 메모 서버
+# Nestjs-MongoDB-Boilerplate(구글 로그인이 가능한 간단한 메모 서버)
 ## 사용 기술
 - firebase: 구글 로그인
 - nestjs: 백엔드 프레임워크
